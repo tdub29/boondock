@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Data pipeline artifacts (large / derivable — never commit)
+data/raw/
+data/processed/
+data/tiles/
+*.pmtiles
+*.mbtiles
+*.gpkg
+*.zip
+
+# Secrets / env
+.env
+.env.*
+*.key
+*.pem
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs / scratch
+*.log
+.cache/
+
+# Dev smoke-test screenshot output
+web/smoke-*.png

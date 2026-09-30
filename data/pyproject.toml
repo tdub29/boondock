@@ -1,0 +1,15 @@
+[project]
+name = "boondock-data"
+version = "0.1.0"
+description = "GIS pipeline: fetch federal public-land + MVUM data and bake PMTiles for the Boondock app"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32",
+    "geopandas>=1.0",
+    "shapely>=2.0",
+    "pyproj>=3.6",
+    "pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false

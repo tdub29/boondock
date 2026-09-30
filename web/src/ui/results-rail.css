@@ -1,0 +1,271 @@
+/* Viewport results rail.
+   Every token here (--surface, --line, --ink*, --accent, --radius*, --shadow,
+   --ease-out, --safe-*) comes from index.css :root, and the card / swatch /
+   chip shapes mirror .dir-panel, .legend-swatch and .basemap-chip in App.css.
+   Nothing in this file touches a class App.css already defines. */
+
+.rail {
+  position: absolute;
+  top: calc(var(--safe-t) + 96px);
+  left: calc(12px + var(--safe-l));
+  /* Under the search results (18) and the pin and route cards (19). */
+  z-index: 17;
+  width: 320px;
+  max-width: calc(100vw - 24px - var(--safe-l) - var(--safe-r));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 10px;
+  border-radius: var(--radius);
+  background: rgba(22, 32, 26, 0.97);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  animation: slideUp 0.22s var(--ease-out);
+  max-height: calc(100vh - var(--safe-t) - var(--toolbar-h) - 128px);
+  overflow: hidden;
+}
+
+/* Phone: the map is the point, so the rail becomes a short bottom-ish card
+   rather than a column covering half the viewport. */
+@media (max-width: 720px) {
+  .rail {
+    right: calc(12px + var(--safe-r));
+    width: auto;
+    max-height: 46vh;
+  }
+}
+
+/* A sheet or panel is open in the same corner. Hidden, not unmounted, so the
+   filter text and chips survive. */
+.rail.rail-covered {
+  display: none;
+}
+
+/* Touch-only: there is no hover to couple, and a permanent list would cover
+   the map a phone needs. hidden outright; give it a toggle if phones
+   want it. */
+@media (hover: none) and (pointer: coarse) {
+  .rail {
+    display: none;
+  }
+}
+
+/* ---------- Head ---------- */
+.rail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rail-head-text {
+  min-width: 0;
+}
+.rail-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.rail-stat {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.rail-reset {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-dim);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.rail-reset:hover {
+  background: var(--surface-hi);
+  color: var(--ink);
+}
+
+/* ---------- Filter field ---------- */
+.rail-field {
+  display: block;
+}
+.rail-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.rail-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  outline: none;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13.5px;
+  padding: 9px 11px;
+}
+.rail-input:focus {
+  border-color: var(--accent);
+}
+.rail-input::placeholder {
+  color: var(--ink-faint);
+}
+.rail-input::-webkit-search-cancel-button {
+  filter: invert(0.75);
+}
+
+/* ---------- Kind chips ---------- */
+.rail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.rail-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s, transform 0.12s var(--ease-out);
+}
+.rail-chip:active {
+  transform: scale(0.97);
+}
+.rail-chip.active {
+  border-color: var(--accent);
+  background: var(--surface-hi);
+}
+.rail-chip.vacant {
+  opacity: 0.45;
+}
+.rail-chip-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-dim);
+}
+.rail-chip.active .rail-chip-label {
+  color: var(--accent);
+}
+.rail-chip-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Swatches (same shapes the legend uses) ---------- */
+.rail-swatch {
+  flex-shrink: 0;
+}
+.rail-swatch.line {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--rail-swatch);
+}
+.rail-swatch.line.dashed {
+  border-radius: 0;
+  background: repeating-linear-gradient(90deg, var(--rail-swatch) 0 4px, transparent 4px 7px);
+}
+.rail-swatch.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rail-swatch);
+  border: 1.5px solid #2a1c0c;
+}
+
+/* ---------- Rows ---------- */
+.rail-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0 -4px;
+}
+.rail-row {
+  height: var(--rail-row-h);
+  /* Rows that are mounted but scrolled out of the scroller skip layout and
+     paint, on top of the JS windowing that keeps the mounted count small. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--rail-row-h);
+}
+.rail-row-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  height: 100%;
+  padding: 0 8px 0 5px;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s;
+}
+.rail-row-btn.hovered,
+.rail-row-btn:hover {
+  background: var(--surface-2);
+  border-left-color: var(--accent);
+}
+/* Selection and keyboard focus carry the same mark as hover, so the highlight
+   is never pointer-only. */
+.rail-row-btn.selected {
+  background: var(--surface-hi);
+  border-left-color: var(--accent);
+}
+.rail-row-btn:focus-visible {
+  background: var(--surface-2);
+  border-left-color: var(--accent);
+}
+.rail-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.rail-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rail-sub {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rail-miles {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rail-row-btn.hovered .rail-miles,
+.rail-row-btn.selected .rail-miles,
+.rail-row-btn:hover .rail-miles {
+  color: var(--ink);
+}
+
+.rail-empty {
+  padding: 10px 4px 4px;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}

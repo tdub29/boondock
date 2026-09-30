@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#16241c"/>
+  <!-- distant ridge -->
+  <path d="M0 372 L120 286 L210 344 L318 252 L420 332 L512 276 L512 512 L0 512 Z" fill="#22382c"/>
+  <!-- tent -->
+  <g>
+    <path d="M256 168 L372 392 L140 392 Z" fill="#e8c87a"/>
+    <path d="M256 168 L256 392 L140 392 Z" fill="#d8b35e"/>
+    <path d="M256 392 L228 330 L284 330 Z" fill="#16241c"/>
+    <!-- guy line / pole tip -->
+    <path d="M256 150 L256 172" stroke="#e8c87a" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <!-- ground -->
+  <rect x="96" y="392" width="320" height="12" rx="6" fill="#7a8a5e"/>
+</svg>

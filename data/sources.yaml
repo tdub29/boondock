@@ -1,0 +1,102 @@
+# Data provenance for the Boondock pipeline. All sources are public-domain
+# federal data unless noted. The web app queries these same services live; the
+# pipeline bakes them into offline PMTiles.
+
+ownership:
+  name: BLM National Surface Management Agency (SMA)
+  service: https://gis.blm.gov/arcgis/rest/services/lands/BLM_Natl_SMA_LimitedScale/MapServer/1
+  agency_field: ADMIN_AGENCY_CODE      # BLM, FS, NPS, FWS, BOR, BIA, DOD, STATE, ...
+  unit_field: ADMIN_UNIT_NAME
+  out_fields: [ADMIN_AGENCY_CODE, ADMIN_DEPT_CODE, ADMIN_UNIT_NAME, ADMIN_ST]
+  license: public domain
+  note: Covers ALL surface-managing agencies, not just BLM.
+
+mvum_roads:
+  name: USFS Motor Vehicle Use Map — Roads
+  service: https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_MVUM_01/MapServer/1
+  out_fields: [name, id, mvum_symbol_name, operationalmaintlevel, surfacetype, seasonal,
+               passengervehicle, highclearancevehicle, forestname, districtname]
+  license: public domain
+
+mvum_trails:
+  name: USFS Motor Vehicle Use Map — Trails
+  service: https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_MVUM_01/MapServer/2
+  out_fields: [name, id, mvum_symbol_name, seasonal, atv, motorcycle, highclearancevehicle,
+               forestname, districtname]
+  license: public domain
+
+nfs_trails:
+  name: USFS National Forest System Trails (hiking / foot trails)
+  service: https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_TrailNFSPublish_01/MapServer/0
+  out_fields: [trail_name, trail_no, trail_class, trail_surface, national_trail_designation, hiker_pedestrian_managed]
+  license: public domain
+  note: Non-motorized foot/system trails. Distinct from mvum_trails (motorized OHV).
+
+named_poi:
+  name: Named natural POIs — peaks, lakes, trailheads (merged point layer, tagged poi_kind)
+  license: public domain
+  sources:
+    - name: USGS GNIS summits (Landforms, feature class Summit)
+      service: https://carto.nationalmap.gov/arcgis/rest/services/geonames/MapServer/5
+      where: "gaz_featureclass = 'Summit'"
+      out_fields: [gaz_name, gaz_featureclass]
+      poi_kind: peak
+    - name: USGS GNIS lakes/reservoirs (Other Hydrographic Features)
+      service: https://carto.nationalmap.gov/arcgis/rest/services/geonames/MapServer/7
+      where: "gaz_featureclass IN ('Lake','Reservoir')"
+      out_fields: [gaz_name, gaz_featureclass]
+      poi_kind: lake
+    - name: USFS INFRA trailheads (recreation sites, TRAILHEAD subtype)
+      service: https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_InfraRecreationSites_01/MapServer/0
+      where: "site_subtype = 'TRAILHEAD'"
+      out_fields: [site_name, site_subtype, recarea_name]
+      poi_kind: trailhead
+  note: GNIS geometry is MultiPoint; field names are gaz_name / gaz_featureclass (not feature_class).
+
+# --- Not yet wired into the live app, but documented for the pipeline ---
+
+padus:
+  name: USGS PAD-US 4.1 (protected areas + Wilderness designation)
+  download: https://www.usgs.gov/programs/gap-analysis-project/science/pad-us-data-download
+  license: public domain
+  use: Source of Wilderness/NPS boundaries to subtract from camping corridors.
+
+blm_gtlf:
+  name: BLM Ground Transportation Linear Features (roads/trails)
+  catalog: https://catalog.data.gov/dataset/blm-natl-gtlf-public-motorized-roads
+  license: public domain
+
+rec_sites:
+  name: Recreation.gov RIDB (developed campgrounds, for the 1-mile exclusion)
+  api: https://ridb.recreation.gov/
+  license: public domain
+  note: Requires a free API key. Used to subtract a 1-mile buffer from corridors.
+
+web_live_campgrounds:
+  note: Key-free live campground/campsite sources currently merged by the web app.
+  sources:
+    - name: USFS Recreation Sites INFRA
+      service: https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_InfraRecreationSites_01/MapServer/0
+      types: [CAMPGROUND, CAMPING AREA, GROUP CAMPGROUND, HORSE CAMP]
+      license: public domain
+    - name: BLM Recreation Points - Campground
+      service: https://gis.blm.gov/arcgis/rest/services/recreation/BLM_Natl_Recs_pts/MapServer/2
+      license: public domain
+    - name: BLM Recreation Points - Campsite Developed
+      service: https://gis.blm.gov/arcgis/rest/services/recreation/BLM_Natl_Recs_pts/MapServer/3
+      license: public domain
+    - name: BLM Recreation Points - Campsite Primitive
+      service: https://gis.blm.gov/arcgis/rest/services/recreation/BLM_Natl_Recs_pts/MapServer/4
+      license: public domain
+    - name: California State Parks Campgrounds
+      service: https://services2.arcgis.com/AhxrK3F6WM8ECvDi/arcgis/rest/services/Campgrounds/FeatureServer/0
+      license: California State Geoportal public dataset
+    - name: Washington State Parks Campsites
+      service: https://services5.arcgis.com/4LKAHwqnBooVDUlX/arcgis/rest/services/Campsites/FeatureServer/78
+      license: Washington State Geospatial Open Data public dataset
+
+# Region → states for build_tiles.ps1
+regions:
+  pnw: [WA, OR, ID]
+  pacific: [CA, NV]
+  mountain-west: [CO, UT, AZ, NM, WY, MT]
