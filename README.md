@@ -8,6 +8,12 @@ Tap anywhere on the map and get a green, yellow or red camping verdict with the 
 
 ![Boondock showing camp corridors along forest roads](docs/screenshot.png)
 
+## Routing preview
+
+![Boondock route planning with paved and off-road driving segments](docs/images/boondock-03.webp)
+
+Route planning separates the paved drive from the forest-road approach to a campsite.
+
 ## What it does
 
 - **Google Earth style 3D map.** Satellite imagery draped over 3D terrain with camera tilt, plus one-tap 2D/3D and Sat/Topo toggles. Basemaps include ESRI World Imagery, USGS Topo, USGS Imagery with labels and OpenStreetMap streets.
