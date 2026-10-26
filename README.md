@@ -87,3 +87,7 @@ All public domain unless noted.
 ## License
 
 [MIT](LICENSE). Basemap and data providers keep their own terms; see the attribution shown in the app.
+
+## More projects
+
+More of my work and contact details are at [twhite.dev](https://twhite.dev).
