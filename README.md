@@ -2,11 +2,15 @@
 
 An open source, offline-first map for off-road navigation and **finding where dispersed (free) camping is legal** on U.S. public land. Built entirely on free, public-domain federal geodata, with no subscription and no account.
 
-Tap anywhere on the map and get a green, yellow or red camping verdict with the reasoning behind it. A Python GIS pipeline bakes federal datasets into PMTiles vector tiles, and a static browser app reads them with no backend. There is no hosted demo; run it locally (see [Quick start](#quick-start)).
+Tap anywhere on the map and get a green, yellow or red camping verdict with the reasoning behind it. A Python GIS pipeline bakes federal datasets into PMTiles vector tiles, and a static browser app reads them with no backend. Watch the walkthrough below, or run it locally (see [Quick start](#quick-start)).
 
 **Status:** personal project, single operator. The web app works online without the pipeline. Region tiles are built locally by the pipeline and are not checked in.
 
-![Boondock showing camp corridors along forest roads](docs/screenshot.png)
+## Walkthrough
+
+![Boondock walkthrough showing 3D terrain, map layers, a topographic basemap, campground details and camping guidance](docs/images/boondock-walkthrough.gif)
+
+Five real app views captured locally around Deschutes National Forest, Oregon: satellite terrain, public land overlays, a 2D topographic map, a USFS campground, and camping guidance. The walkthrough is a paced sequence of screenshots from the running app. Camping guidance requires checking current agency rules and closures.
 
 ## Routing preview
 
